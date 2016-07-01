@@ -1,6 +1,6 @@
 import os, ctypes, datetime # Importing modules that are required for the log function to work
-
-file_directory = os.getcwd()[0:-14] # 14 is the length of "insertgamehere"
+# Obtaining the location of the game files
+file_directory = os.path.dirname(os.getcwd())
 
 def log(error_message): # Defining the error logging function
     try:
