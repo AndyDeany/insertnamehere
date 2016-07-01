@@ -1,4 +1,4 @@
-import os, ctypes
+import os, ctypes, datetime # Importing modules that are required for the log function to work
 
 file_directory = os.getcwd()[0:-14] # 14 is the length of "insertgamehere"
 
@@ -16,3 +16,24 @@ def log(error_message): # Defining the error logging function
     #! Add some code here to show a message in game that doesn't force quit the game unless the error is sufficiently bad
     ctypes.windll.user32.MessageBoxA(0, "An error has occurred:\n\n    " + error_message + ".\n\n\nPlease check log.txt for details.", "Error", 1)
     raise
+
+### ---------- IMPORTING MODULES - START ---------- ###
+try:    # Importing and initialising pygame
+    import pygame
+    try:
+        import pygame._view # sometimes necessary. If it isn't this will cause an error
+    except Exception, error:
+        pass
+    pygame.init()
+except Exception, error:
+    log("Failed to initialise pygame")
+    
+try:    # Importing other modules
+    import sys
+    import datetime, time
+    import math, random
+except Exception, error:
+    log(error, "Failed to import modules")
+### ---------- IMPORTING MODULES - END ---------- ###
+    
+    
