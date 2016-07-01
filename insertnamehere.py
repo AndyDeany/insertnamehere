@@ -1,6 +1,6 @@
 import os, ctypes, datetime # Importing modules that are required for the log function to work
-# Obtaining the location of the game files
-file_directory = os.path.dirname(os.getcwd())
+
+file_directory = os.path.dirname(os.getcwd())   # Obtaining the location of the game files
 
 def log(error_message): # Defining the error logging function
     try:
