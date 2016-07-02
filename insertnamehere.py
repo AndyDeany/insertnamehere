@@ -37,7 +37,7 @@ except Exception as error:
 ### ---------- IMPORTING MODULES - END ---------- ###
 
 
-### ---------- INITIALISING GLOBAL VARIABLES ---------- ###
+### ---------- INITIALISING GLOBAL VARIABLES - START ---------- ###
 try:    # Initialising game screen
     screen = pygame.display.set_mode((0,0), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN)  # (0,0) defaults to the user's screen size
     screen_width = screen.get_width()
@@ -46,7 +46,7 @@ try:    # Initialising game screen
     MONITOR_HEIGHT = screen_height
     
     pygame.display.set_caption("insertnamehere (Alpha 1.0)")
-    #! Insert code for game icon here
+    #! pygame.display.set_icon()    add an image for the icon as the argument
     # Defining a fucntion to change the screen settings after it has been created
     def reinitialise_screen(resolution=(screen_width,screen_height), mode="fullscreen"):
         global error
@@ -63,9 +63,8 @@ try:    # Initialising game screen
                 os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
                 screen = pygame.display.set_mode(resolution, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.NOFRAME)
             else:
-                error = "Unknown mode for reinitialise_screen(): \"" + mode + "\" [syntax error]."
-                raise
-        except Exception, error:
+                raise Exception("Unknown mode for reinitialise_screen(): \"" + mode + "\" [syntax error].")
+        except Exception as error:
             log("Failed to reinitialise screen in " + mode + " mode at " + str(screen_width) + "x" + str(screen_height) + " resolution")
 except Exception as error:
     log("Failed to initialise game screen")
@@ -74,3 +73,50 @@ try:    # Initialising other variables
     fps = 60
 except Exception as error:
     log("Failed to initialise other global variables")
+### ---------- INITIALISING GLOBAL VARIABLES - END ---------- ###
+
+### ---------- CLASS DEFINITIONS - START ---------- ###
+class Character(object):
+    def __init__(self, name, max_life, current_life):
+        self.name = name
+        self.max_life = max_life
+        self.current_life = current_life
+
+class Player(Character):
+    def __init__(self, name, max_life, current_life):
+        super(Player, self).__init__(name, max_life, current_life)
+        self.inventory = []
+        
+    def gain_item(self, name, amount):  #! Add some sort of sorting. Maybe alphabetical by name? Or perhaps allow the user to order their inventory?
+        for item in inventory:      #! Inventory could be a grid or list. Grid should allow the user to order their own inventory. Position could be a 3rd element in the inventory tuple.
+            if item[0].name == name:
+                item[1] += amount
+                break
+        else:
+            for item in items:
+                if item.name == name:
+                    inventory.append((item, amount))
+    
+    def lose_item(self, name, amount):
+        """Should only be called if the player has the amount of the item specified"""
+        for item in inventory:
+            if item[0].name == name:
+                item[1] -= amount
+                if item[1] == 0:
+                    inventory.remove(item)
+                break
+        
+class Item(object):
+    def __init__(self, name):
+        self.name = name
+        self.amount = 0
+        self.image = None
+    
+    def load_image(self):
+        self.image = load(name)
+    
+    def unload_image(self):
+        self.image = None
+    
+    
+
