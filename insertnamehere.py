@@ -1,7 +1,7 @@
 import os, ctypes, datetime # Importing modules that are required for the log function to work
 
 file_directory = os.path.dirname(os.getcwd())   # Obtaining the location of the game files
-file_directory = "E:\Users\Andrew\Desktop\insertnamehere" #! temp because running with komodo gives wrong path
+file_directory = "E:\Users\Andrew\Desktop\insertnamehere\\" #! temp because running with komodo gives wrong path
 def log(error_message): # Defining the error logging function
     try:
         error_log = open("".join((file_directory, "log.txt")), "a")
@@ -48,7 +48,7 @@ except Exception as error:
 
 ### ---------- INITIALISING GLOBAL VARIABLES - START ---------- ###
 try:    ## Initialising game screen
-    screen = pygame.display.set_mode((0,0), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN)  # (0,0) defaults to the user's screen size
+    screen = pygame.display.set_mode((0,0), pygame.HWSURFACE|pygame.DOUBLEBUF)#|pygame.FULLSCREEN)  # (0,0) defaults to the user's screen size
     screen_width = screen.get_width()
     screen_height = screen.get_height()
     MONITOR_WIDTH = screen_width
@@ -63,13 +63,13 @@ try:    ## Initialising game screen
             if mode == "fullscreen":
                 screen = pygame.display.set_mode(resolution, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN)
             elif mode == "windowed":
-                os.environ['SDL_VIDEO_WINDOW_POS'] = "".join(str((MONITOR_WIDTH - screen_width)/2), ",", str((MONITOR_HEIGHT - screen_height)/2))
+                os.environ['SDL_VIDEO_WINDOW_POS'] = "".join((str((MONITOR_WIDTH - screen_width)/2), ",", str((MONITOR_HEIGHT - screen_height)/2)))
                 screen = pygame.display.set_mode(resolution, pygame.HWSURFACE|pygame.DOUBLEBUF)
             elif mode == "borderless":
                 os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
                 screen = pygame.display.set_mode(resolution, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.NOFRAME)
             else:
-                raise Exception("".join("Unknown mode for reinitialise_screen(): \"", mode, "\" [syntax error]."))
+                raise Exception("".join(("Unknown mode for reinitialise_screen(): \"", mode, "\" [syntax error].")))
         except Exception as error:
             log("".join(("Failed to reinitialise screen in ", mode, " mode at ", str(screen_width), "x", str(screen_height), " resolution")))
     
@@ -167,6 +167,10 @@ class Item(object):
 ### ---------- PROGRAM DISPLAY - START ---------- ###
 # Initialising essential display variables
 ongoing = True
+accepting_text = True
+maximum_characters = 20
+font = pygame.font.SysFont("Impact", 20, False, False)
+execfile("key_attributes.py")
 try:
     clock = pygame.time.Clock()
     start_time = time.time()
@@ -176,7 +180,7 @@ except Exception as error:
 ## Game window while loop
 while ongoing:
     try:
-        current_time = time.time() - start.time
+        current_time = time.time() - start_time
     except Exception as error:
         log("Failed to update game run time")
     
@@ -191,10 +195,11 @@ while ongoing:
         log("Failed to determine mouse position")
     
     try:
-        execfile("key_timer.py")
+        execfile("input_timer.py")
     except Exception as error:
         log("Failed to calculate key held duration")
-        
+    screen.fill((0,0,0))
+    screen.blit(font.render(input_text, True, (255,255,255)), (0,0))
     try: ## Receiving user inputs
         for event in pygame.event.get():
             if event.type == pygame.QUIT:   # When the user exits the game manually
@@ -221,11 +226,14 @@ while ongoing:
                     #! this would be a good place to do it, since it would only be applicable when inputting text.
                     #! The only reason this would be pointless is if there are never two text boxes to fill in on the same screen, which isn't that unlikely, so it may actually be pointless
                     elif event.key == 13: accepting_text = False    # This is the enter key. It will cause the text to be accepted.
-                    else: input_text = "".join(input_text, event.unicode)
+                    else: input_text = "".join((input_text, event.unicode))
             elif event.type == pygame.KEYUP:
-                execfile("keyup.py")
+                execfile("keyup.py")        
     except Exception as error:
         log("Failed to receive user inputs correctly")
+    
+    if accepting_text:
+        execfile("multiple_character_input.py")
         
     try:
         pygame.display.flip()   # Updating the screen

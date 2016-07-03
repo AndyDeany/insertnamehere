@@ -1,3 +1,6 @@
+if left_held: left_held_time += 1
+if middle_held: middle_held_time += 1
+if right_held: right_held_time += 1
 if backspace_held: backspace_held_time += 1
 if tab_held: tab_held_time += 1
 if enter_held: enter_held_time += 1
@@ -68,6 +71,7 @@ if numpadmultiply_held: numpadmultiply_held_time += 1
 if numpadminus_held: numpadminus_held_time += 1
 if numpadplus_held: numpadplus_held_time += 1
 if numpadenter_held: numpadenter_held_time += 1
-if uparrow_held: uparrow_held_time += 1downarrow_held: downarrow_held_time += 1
+if uparrow_held: uparrow_held_time += 1
+if downarrow_held: downarrow_held_time += 1
 if rightarrow_held: rightarrow_held_time += 1
 if leftarrow_held: leftarrow_held_time += 1
