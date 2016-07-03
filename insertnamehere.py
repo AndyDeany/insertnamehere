@@ -4,46 +4,27 @@ file_directory = os.path.dirname(os.getcwd())   # Obtaining the location of the 
 file_directory = "E:\Users\Andrew\Desktop\insertnamehere" #! temp because running with komodo gives wrong path
 def log(error_message): # Defining the error logging function
     try:
-        error_log = open("".join(file_directory, "log.txt"), "a")
+        error_log = open("".join((file_directory, "log.txt")), "a")
         try:
-            error_log.write("".join(str(datetime.datetime.utcnow())[0:19], " - ", error_message, ": ", str(error), "\n"))
+            error_log.write("".join((str(datetime.datetime.utcnow())[0:19], " - ", error_message, ": ", str(error), "\n")))
         except:
-            error_log.write("".join(str(datetime.datetime.utcnow())[0:19], " - ", error_message, ": Details Unknown\n"))
+            error_log.write("".join((str(datetime.datetime.utcnow())[0:19], " - ", error_message, ": Details Unknown\n")))
         error_log.close()
-    except Exception, error:    # This will likely happen only when file_directory has not yet been defined
-        ctypes.windll.user32.MessageBoxA(0, "".join("An error has occurred:\n\n    ", error_message, ".\n\n\nThis error occurred very early during game initialisation and could not be logged."), "Error", 1)
+    except:    # This will likely happen only when file_directory has not yet been defined
+        ctypes.windll.user32.MessageBoxA(0, "".join(("An error has occurred:\n\n    ", error_message, ".\n\n\nThis error occurred very early during game initialisation and could not be logged.")), "Error", 1)
         raise
     #! Add some code here to show a message in game that doesn't force quit the game unless the error is sufficiently bad
-    ctypes.windll.user32.MessageBoxA(0, "".join("An error has occurred:\n\n    ", error_message, ".\n\n\nPlease check log.txt for details."), "Error", 1)
+    ctypes.windll.user32.MessageBoxA(0, "".join(("An error has occurred:\n\n    ", error_message, ".\n\n\nPlease check log.txt for details.")), "Error", 1)
     raise
 
 def load_image(image_name, fade_enabled=False): # Defining a function to load images
     try:    #! Add stuff for loading images of the correct resolution depending on the player's resolution
         if not fade_enabled:
-            return pygame.image.load("".join(file_directory, "Image Files\\", image_name, ".png")).convert_alpha()
+            return pygame.image.load("".join((file_directory, "Image Files\\", image_name, ".png"))).convert_alpha()
         else:
-            return pygame.image.load("".join(file_directory, "Image Files\\", image_name, ".png")).convert()
+            return pygame.image.load("".join((file_directory, "Image Files\\", image_name, ".png"))).convert()
     except Exception as error:
-        log("".join("Failed to load image: ", image_name, ".png"))
-
-def reinitialise_screen(resolution=(screen_width,screen_height), mode="fullscreen"):    # Defining a function to change the screen settings after it has been created
-    global error
-    try:
-        global screen, screen_width, screen_height
-        screen_width = resolution[0]
-        screen_height = resolution[1]
-        if mode == "fullscreen":
-            screen = pygame.display.set_mode(resolution, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN)
-        elif mode == "windowed":
-            os.environ['SDL_VIDEO_WINDOW_POS'] = "".join(str((MONITOR_WIDTH - screen_width)/2), ",", str((MONITOR_HEIGHT - screen_height)/2))
-            screen = pygame.display.set_mode(resolution, pygame.HWSURFACE|pygame.DOUBLEBUF)
-        elif mode == "borderless":
-            os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
-            screen = pygame.display.set_mode(resolution, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.NOFRAME)
-        else:
-            raise Exception("".join("Unknown mode for reinitialise_screen(): \"", mode, "\" [syntax error]."))
-    except Exception as error:
-        log("".join("Failed to reinitialise screen in ", mode, " mode at ", str(screen_width), "x", str(screen_height), " resolution"))
+        log("".join(("Failed to load image: ", image_name, ".png")))
 
 ### ---------- IMPORTING MODULES - START ---------- ###
 try:    # Importing and initialising pygame
@@ -72,6 +53,26 @@ try:    ## Initialising game screen
     screen_height = screen.get_height()
     MONITOR_WIDTH = screen_width
     MONITOR_HEIGHT = screen_height
+    # Defining a function to change the screen settings after it has been created    
+    def reinitialise_screen(resolution=(screen_width,screen_height), mode="fullscreen"):
+        global error
+        try:
+            global screen, screen_width, screen_height
+            screen_width = resolution[0]
+            screen_height = resolution[1]
+            if mode == "fullscreen":
+                screen = pygame.display.set_mode(resolution, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN)
+            elif mode == "windowed":
+                os.environ['SDL_VIDEO_WINDOW_POS'] = "".join(str((MONITOR_WIDTH - screen_width)/2), ",", str((MONITOR_HEIGHT - screen_height)/2))
+                screen = pygame.display.set_mode(resolution, pygame.HWSURFACE|pygame.DOUBLEBUF)
+            elif mode == "borderless":
+                os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
+                screen = pygame.display.set_mode(resolution, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.NOFRAME)
+            else:
+                raise Exception("".join("Unknown mode for reinitialise_screen(): \"", mode, "\" [syntax error]."))
+        except Exception as error:
+            log("".join(("Failed to reinitialise screen in ", mode, " mode at ", str(screen_width), "x", str(screen_height), " resolution")))
+    
     #! resolutions = [_list of tuples of available resolutions_]    #! This could all be removed, along with reinitialise_screen, if we decide to have a fixed resolution.
     #! if (MONITOR_WIDTH, MONITOR_HEIGHT) not in resolutions:
     #!      screen_width = 0
@@ -87,8 +88,7 @@ try:    ## Initialising game screen
     #!      reinitialise_screen(screen_width, screen_height)
     
     pygame.display.set_caption("insertnamehere (Alpha 1.0)")
-    #! pygame.display.set_icon()    add an image for the icon as the argument
-    
+    #! pygame.display.set_icon()    add an image for the icon as the argument   
 except Exception as error:
     log("Failed to initialise game screen")
 ## Initialising other global variables
@@ -107,8 +107,11 @@ except Exception as error:
 ### ---------- FUNCTION DEFINITIONS - START ---------- ###
 def display(image, coordinates, area=None, special_flags=0):
     """Takes coordinates for a 1920x1080 window"""
-    coordinates = (coordinates[0]*(screen_width/1920.0), coordinates[1]*(screen_height/1080.0))
-    screen.blit(image, coordinates, area, special_flags)
+    try:
+        coordinates = (coordinates[0]*(screen_width/1920.0), coordinates[1]*(screen_height/1080.0))
+        screen.blit(image, coordinates, area, special_flags)
+    except Exception as error:
+        log(" ".join(("Failed to display image at", str(coordinates))))
 ### ---------- FUNCTION DEFINITIONS - END ---------- ###
 
 ### ---------- CLASS DEFINITIONS - START ---------- ###
@@ -135,7 +138,7 @@ class Player(Character):
                     if item.name == name:
                         inventory.append((item, amount))
         except Exception as error:
-            log(" ".join("Failed to add", str(amount), name, "to the player's inventory"))
+            log(" ".join(("Failed to add", str(amount), name, "to the player's inventory")))
     
     def lose_item(self, name, amount):
         """Should only be called if the player has the amount of the item specified"""
@@ -148,7 +151,7 @@ class Player(Character):
                         inventory.remove(item)
                     break
         except Exception as error:
-            log(" ".join("Failed to remove", str(amount), name, "from the player's inventory"))
+            log(" ".join(("Failed to remove", str(amount), name, "from the player's inventory")))
         
 class Item(object):
     def __init__(self, name):
@@ -186,8 +189,12 @@ while ongoing:
         (mouse_x, mouse_y) = pygame.mouse.get_pos()
     except Exception as error:
         log("Failed to determine mouse position")
-    #! insert key timer here
     
+    try:
+        execfile("key_timer.py")
+    except Exception as error:
+        log("Failed to calculate key held duration")
+        
     try: ## Receiving user inputs
         for event in pygame.event.get():
             if event.type == pygame.QUIT:   # When the user exits the game manually
