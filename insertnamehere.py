@@ -1,7 +1,7 @@
 import os, ctypes, datetime # Importing modules that are required for the log function to work
 
 file_directory = os.path.dirname(os.getcwd())   # Obtaining the location of the game files
-
+file_directory = "E:\Users\Andrew\Desktop\insertnamehere" #! temp because running with komodo gives wrong path
 def log(error_message): # Defining the error logging function
     try:
         error_log = open("".join(file_directory, "log.txt"), "a")
@@ -66,7 +66,7 @@ except Exception as error:
 
 
 ### ---------- INITIALISING GLOBAL VARIABLES - START ---------- ###
-try:    # Initialising game screen
+try:    ## Initialising game screen
     screen = pygame.display.set_mode((0,0), pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.FULLSCREEN)  # (0,0) defaults to the user's screen size
     screen_width = screen.get_width()
     screen_height = screen.get_height()
@@ -91,11 +91,17 @@ try:    # Initialising game screen
     
 except Exception as error:
     log("Failed to initialise game screen")
-
-try:    # Initialising other variables
-    fps = 60
+## Initialising other global variables
+current = "main menu"   # The part of the game the screen is showing
+fps = 60
+# Keyboard input related variables
+accepting_text = False  # Showing whether the program is accepting text input from the user
+input_text = ""         # The input text from the user
+max_characters = 0      # The maximum amount of allowed characters in an input text
+try:
+    execfile("reset_inputs.py")
 except Exception as error:
-    log("Failed to initialise other global variables")
+    log("Failed to initialise keyboard input variabes")
 ### ---------- INITIALISING GLOBAL VARIABLES - END ---------- ###
 
 ### ---------- FUNCTION DEFINITIONS - START ---------- ###
@@ -148,12 +154,81 @@ class Item(object):
     def __init__(self, name):
         self.name = name
         self.image = None
-    
-    def load_image(self):
-        self.image = load_image(name)        
-    
-    def unload_image(self):
+    # The following two functions allow for the loading and unloading of an items images to free up RAM when they are not required.
+    def load_images(self):
+        self.image = load_image(name)  
+    def unload_images(self):
         self.image = None
-    
-    
+### ---------- CLASS DEFINITIONS - END ---------- ###
 
+### ---------- PROGRAM DISPLAY - START ---------- ###
+# Initialising essential display variables
+ongoing = True
+try:
+    clock = pygame.time.Clock()
+    start_time = time.time()
+except Exception as error:
+    log("Failed to initialise essential display variables")
+
+## Game window while loop
+while ongoing:
+    try:
+        current_time = time.time() - start.time
+    except Exception as error:
+        log("Failed to update game run time")
+    
+    try:
+        execfile("reset_inputs.py")
+    except Exception as error:
+        log("Failed to reset user input values")
+    
+    try:
+        (mouse_x, mouse_y) = pygame.mouse.get_pos()
+    except Exception as error:
+        log("Failed to determine mouse position")
+    #! insert key timer here
+    
+    try: ## Receiving user inputs
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:   # When the user exits the game manually
+                ongoing = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1: left_held = 1
+                elif event.button == 2: middle_held = 1
+                elif event.button == 3: right_held = 1
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    left = 1
+                    left_held = 0
+                elif event.button == 2:
+                    middle = 1
+                    middle_held = 0
+                elif event.button == 3:
+                    right = 1
+                    right_held = 0
+            elif event.type == pygame.KEYDOWN:
+                execfile("keydown.py")
+                if accepting_text:
+                    if event.key == 8 and input_text != "": input_text = input_text[:-1]
+                    elif event.key == 9: pass #! This is the TAB key. Perhaps it should make the cursor go to the next box and
+                    #! this would be a good place to do it, since it would only be applicable when inputting text.
+                    #! The only reason this would be pointless is if there are never two text boxes to fill in on the same screen, which isn't that unlikely, so it may actually be pointless
+                    elif event.key == 13: accepting_text = False    # This is the enter key. It will cause the text to be accepted.
+                    else: input_text = "".join(input_text, event.unicode)
+            elif event.type == pygame.KEYUP:
+                execfile("keyup.py")
+    except Exception as error:
+        log("Failed to receive user inputs correctly")
+        
+    try:
+        pygame.display.flip()   # Updating the screen
+        clock.tick(fps)         # [fps] times per second
+    except Exception as error:
+        log("Failed to update screen")
+### ---------- PROGRAM DISPLAY - END ---------- ###
+
+#! Add code for autosaving the game
+
+pygame.quit()
+
+raw_input("Press Enter to Quit")    #! Remove this before compiling. It's only useful for debugging.
