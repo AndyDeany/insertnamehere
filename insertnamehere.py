@@ -198,8 +198,8 @@ while ongoing:
     except Exception as error:
         log("Failed to determine mouse position")
     
-    try:
-        execfile("input_timer.py")
+    try:    #! Move this to "if accepting_text" below if it isn't used other than for text input. If it is used in the game,
+        execfile("input_timer.py")  #! however, parts of it could still be moved out (the ones that aren't used in the game)
     except Exception as error:
         log("Failed to calculate key held duration")
     screen.fill((0,0,0))#!!
@@ -226,10 +226,7 @@ while ongoing:
                 execfile("keydown.py")
                 if accepting_text:
                     if event.key == 8 and input_text != "": input_text = input_text[:-1]
-                    elif event.key == 9: pass #! This is the TAB key. Perhaps it should make the cursor go to the next box and
-                    #! this would be a good place to do it, since it would only be applicable when inputting text.
-                    #! The only reason this would be pointless is if there are never two text boxes to fill in on the same screen, which isn't that unlikely, so it may actually be pointless
-                    elif event.key == 13: accepting_text = False    # This is the enter key. It will cause the text to be accepted.
+                    elif event.key == 9: pass   #! This is the TAB key. See extended comments.
                     elif len(input_text) < maximum_characters: input_text = "".join((input_text, event.unicode))
             elif event.type == pygame.KEYUP:
                 execfile("keyup.py")        
