@@ -9,6 +9,10 @@ def log(error_message): # Defining the error logging function
             error_log.write("".join((str(datetime.datetime.utcnow())[0:19], " - ", error_message, ": ", str(error), "\n")))
         except:
             error_log.write("".join((str(datetime.datetime.utcnow())[0:19], " - ", error_message, ": Details Unknown\n")))
+        try:
+            error_log.write(" ".join(("current =", current)))
+        except:
+            error_log.write("current = undefined.")
         error_log.close()
     except:    # This will likely happen only when file_directory has not yet been defined
         ctypes.windll.user32.MessageBoxA(0, "".join(("An error has occurred:\n\n    ", error_message, ".\n\n\nThis error occurred very early during game initialisation and could not be logged.")), "Error", 1)
@@ -127,8 +131,10 @@ class Character(object):
         self.current_life = current_life
 
 class Player(Character):
-    def __init__(self, name, max_life, current_life):
+    def __init__(self, name, max_life, current_lifem, hitbox_width, hitbox_height):
         super(Player, self).__init__(name, max_life, current_life)
+        self.hitbox_width = hitbox_width    # The width of the character's hitbox
+        self.hitbox_height = hitbox_height  # The height of the character's hitbox
         self.inventory = []
         
     def gain_item(self, name, amount):  #! Add some sort of sorting. Maybe alphabetical by name? Or perhaps allow the user to order their inventory?
@@ -158,7 +164,7 @@ class Player(Character):
         except Exception as error:
             log(" ".join(("Failed to remove", str(amount), name, "from the player's inventory")))
         
-class Item(object):
+class Item(object): #! Perhaps add image name to this if it would make it easier.
     def __init__(self, name):
         self.name = name
         self.image = None
@@ -167,6 +173,35 @@ class Item(object):
         self.image = load_image(name)  
     def unload_images(self):
         self.image = None
+        
+class Area(object): #! Perhaps add image name to this if it would make it easier.
+    def __init(self, name, grey_left, grey_up, accessible_width, accessible_height, blocked_squares, extras, exits):
+        self.name = name
+        self.image = None
+        self.width = width      # The width of the image in pixels
+        self.height = height    # The height of the image in pixels
+        self.grey_left = grey_left
+        self.grey_up = grey_up
+        self.accessible_width = accessible_width
+        self.accessible_height = accessible_height
+        self.blocked_squares = blocked_squares  # A tuple (start_x, end_x, start_y, end_y)
+        self.extras = extras
+        self.exits = exits
+    # The following two functions allow for the loading and unloading of an items images to free up RAM when they are not required.    
+    def load_images(self):
+        self.image = load_image(name)
+    def unload_images(self):
+        self.image = None
+    
+    def add_blocked(self, displacement, width, height):     # Adds a rectangle of pixels to the blocked list
+        self.blocked.append((displacement[0], displacement[0] + width, displacement[1], displacement[1]+width))
+    def remove_blocked(self, displacement, width, height):  # Removes a rectangle of pixels to the blocked list
+        try:
+            self.blocked.remove((displacement[0], displacement[0] + width, displacement[1], displacement[1]+width))
+        except Exception as error:
+            log("".join(("Failed to remove blocked area: (", str(
+        
+        
 ### ---------- CLASS DEFINITIONS - END ---------- ###
 
 ### ---------- PROGRAM DISPLAY - START ---------- ###
