@@ -40,6 +40,7 @@ elif event.key == 46:
     fullstop_held = 0
     fullstop_held_time = 0
 elif event.key == 47:
+    forwardslash = 1
     forwardslash_held = 0
     forwardslash_held_time = 0
 # Numbers across the top
@@ -86,7 +87,8 @@ elif event.key == 57:
 # Miscellaneous
 elif event.key == 59:
     semicolon = 1
-    semicolon = 0
+    semicolon_held = 0
+    semicolon_held_time = 0
 elif event.key == 60:
     backslash = 1
     backslash_held = 0
@@ -276,7 +278,8 @@ elif event.key == 268:
     numpadminus_held_time = 0
 elif event.key == 269:
     numpadplus = 1
-    numpadplus_held = 0    
+    numpadplus_held = 0
+    numpadplus_held_time = 0
 elif event.key == 270:
     numpadenter = 1
     numpadenter_held = 0
@@ -317,7 +320,8 @@ elif event.key == 280:
     pageup_held_time = 0
 elif event.key == 281:
     pagedown = 1
-    pagedown_held = 0         
+    pagedown_held = 0
+    pagedown_held_time = 0
 # F keys
 elif event.key == 282:
     f1 = 1
@@ -389,5 +393,5 @@ elif event.key == 308:
     alt_held = 0
     alt_held_time = 0
 #! shift_held = rightshift_held or leftshift_held       #! remove these or remove the separated ones above.
-#! control_held = rightcontrol_held or leftcontrol_held #! if you keep these, you need to add recognition for them in keyup.py
+#! control_held = rightcontrol_held or leftcontrol_held #! if you keep these, you need to add recognition for them in keyup.py (here, that is)
 #! Go through this at the end and decide if everything needs keeping. Especially if left/right shift/control need separate things at all.

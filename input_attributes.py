@@ -1,6 +1,8 @@
+# Mouse inputs
 left_held = 0
 middle_held = 0
 right_held = 0
+# Miscellaneous
 backspace_held = 0
 tab_held = 0
 enter_held = 0
@@ -12,6 +14,7 @@ comma_held = 0
 minus_held = 0
 fullstop_held = 0
 forwardslash_held = 0
+# Numbers across the top
 zero_held = 0
 one_held = 0
 two_held = 0
@@ -22,6 +25,7 @@ six_held = 0
 seven_held = 0
 eight_held = 0
 nine_held = 0
+# Miscellaneous
 semicolon_held = 0
 backslash_held = 0
 equals_held = 0
@@ -29,6 +33,7 @@ opensquarebracket_held = 0
 sharp_held = 0
 closesquarebracket_held = 0
 backtick_held = 0
+# Alphabet keys
 a_held = 0
 b_held = 0
 c_held = 0
@@ -55,7 +60,9 @@ w_held = 0
 x_held = 0
 y_held = 0
 z_held = 0
+# Miscellaneous
 delete_held = 0
+# Numpad
 numpad0_held = 0
 numpad1_held = 0
 numpad2_held = 0
@@ -71,15 +78,18 @@ numpadmultiply_held = 0
 numpadminus_held = 0
 numpadplus_held = 0    
 numpadenter_held = 0
+# Arrow keys
 uparrow_held = 0
 downarrow_held = 0
 rightarrow_held = 0
 leftarrow_held = 0
+# Miscellaneous
 insert_held = 0
 home_held = 0
 end_held = 0
 pageup_held = 0
-pagedown_held = 0         
+pagedown_held = 0
+# F keys
 f1_held = 0
 f2_held = 0
 f3_held = 0
@@ -92,15 +102,18 @@ f9_held = 0
 f10_held = 0
 f11_held = 0
 f12_held = 0
+# Key modifiers
 rightshift_held = 0
 leftshift_held = 0
 rightcontrol_held = 0
 leftcontrol_held = 0
 alt_held = 0
 
+# Mouse inputs
 left_held_time = 0
 middle_held_time = 0
 right_held_time = 0
+# Miscellaneous
 backspace_held_time = 0
 tab_held_time = 0
 enter_held_time = 0
@@ -112,6 +125,7 @@ comma_held_time = 0
 minus_held_time = 0
 fullstop_held_time = 0
 forwardslash_held_time = 0
+# Numbers across the top
 zero_held_time = 0
 one_held_time = 0
 two_held_time = 0
@@ -122,6 +136,7 @@ six_held_time = 0
 seven_held_time = 0
 eight_held_time = 0
 nine_held_time = 0
+# Miscellaneous
 semicolon_held_time = 0
 backslash_held_time = 0
 equals_held_time = 0
@@ -129,6 +144,7 @@ opensquarebracket_held_time = 0
 sharp_held_time = 0
 closesquarebracket_held_time = 0
 backtick_held_time = 0
+# Alphabet keys
 a_held_time = 0
 b_held_time = 0
 c_held_time = 0
@@ -155,7 +171,9 @@ w_held_time = 0
 x_held_time = 0
 y_held_time = 0
 z_held_time = 0
+# Miscellaneous
 delete_held_time = 0
+# Numpad
 numpad0_held_time = 0
 numpad1_held_time = 0
 numpad2_held_time = 0
@@ -171,10 +189,34 @@ numpadmultiply_held_time = 0
 numpadminus_held_time = 0
 numpadplus_held_time = 0
 numpadenter_held_time = 0
+# Arrow keys
 uparrow_held_time = 0
 downarrow_held_time = 0
 rightarrow_held_time = 0
 leftarrow_held_time = 0
-
-numlock = 0
-capslock = 0
+# Miscellaneous
+insert_held_time = 0
+home_held_time = 0
+end_held_time = 0
+pageup_held_time = 0
+pagedown_held_time = 0
+# F keys
+f1_held_time = 0
+f2_held_time = 0
+f3_held_time = 0
+f4_held_time = 0
+f5_held_time = 0
+f6_held_time = 0
+f7_held_time = 0
+f8_held_time = 0
+f9_held_time = 0
+f10_held_time = 0
+f11_held_time = 0
+f12_held_time = 0
+# Key modifiers
+rightshift_held_time = 0
+leftshift_held_time = 0
+rightcontrol_held_time = 0
+leftcontrol_held_time = 0
+alt_held_time = 0
+#! Go through and remove unused attributes

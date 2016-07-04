@@ -1,7 +1,7 @@
 import os, ctypes, datetime # Importing modules that are required for the log function to work
 
-file_directory = os.path.dirname(os.getcwd())   # Obtaining the location of the game files
-file_directory = "E:\Users\Andrew\Desktop\insertnamehere\\" #! temp because running with komodo gives wrong path
+file_directory = os.path.dirname(os.getcwd()) + "\\"   # Obtaining the location of the game files
+
 def log(error_message): # Defining the error logging function
     try:
         error_log = open("".join((file_directory, "log.txt")), "a")
@@ -93,15 +93,20 @@ except Exception as error:
     log("Failed to initialise game screen")
 ## Initialising other global variables
 current = "main menu"   # The part of the game the screen is showing
-fps = 60
-# Keyboard input related variables
+fps = 60                # Frames per second
+frame = 1               # The frame the game is currently on
+# Keyboard and mouse input related variables
 accepting_text = False  # Showing whether the program is accepting text input from the user
 input_text = ""         # The input text from the user
 max_characters = 0      # The maximum amount of allowed characters in an input text
+def return_key(n):  # Returns the keyboard key with key n.
+    return keys[n]  # keys = pygame.key.get_pressed() (should be assigned before this function is called)
+character_keys = [n for n in range(44,58)] + [n for n in range(96,123)] + [n for n in range(256,272)] + [39, 59, 60, 61, 91, 92, 93]    # A list of all the keys that can produce characters when pressed
 try:
-    execfile("reset_inputs.py")
+    execfile("reset_inputs.py")    
+    execfile("input_attributes.py")
 except Exception as error:
-    log("Failed to initialise keyboard input variabes")
+    log("Failed to initialise keyboard/mouse input variabes")
 ### ---------- INITIALISING GLOBAL VARIABLES - END ---------- ###
 
 ### ---------- FUNCTION DEFINITIONS - START ---------- ###
@@ -167,10 +172,9 @@ class Item(object):
 ### ---------- PROGRAM DISPLAY - START ---------- ###
 # Initialising essential display variables
 ongoing = True
-accepting_text = True
-maximum_characters = 20
-font = pygame.font.SysFont("Impact", 20, False, False)
-execfile("key_attributes.py")
+accepting_text = True#!!
+maximum_characters = 100#!!
+font = pygame.font.SysFont("Impact", 20, False, False)#!!
 try:
     clock = pygame.time.Clock()
     start_time = time.time()
@@ -198,8 +202,8 @@ while ongoing:
         execfile("input_timer.py")
     except Exception as error:
         log("Failed to calculate key held duration")
-    screen.fill((0,0,0))
-    screen.blit(font.render(input_text, True, (255,255,255)), (0,0))
+    screen.fill((0,0,0))#!!
+    screen.blit(font.render(input_text, True, (255,255,255)), (0,0))#!!
     try: ## Receiving user inputs
         for event in pygame.event.get():
             if event.type == pygame.QUIT:   # When the user exits the game manually
@@ -226,15 +230,19 @@ while ongoing:
                     #! this would be a good place to do it, since it would only be applicable when inputting text.
                     #! The only reason this would be pointless is if there are never two text boxes to fill in on the same screen, which isn't that unlikely, so it may actually be pointless
                     elif event.key == 13: accepting_text = False    # This is the enter key. It will cause the text to be accepted.
-                    else: input_text = "".join((input_text, event.unicode))
+                    elif len(input_text) < maximum_characters: input_text = "".join((input_text, event.unicode))
             elif event.type == pygame.KEYUP:
                 execfile("keyup.py")        
     except Exception as error:
         log("Failed to receive user inputs correctly")
     
     if accepting_text:
+        keys = pygame.key.get_pressed()
+        (numlock, capslock) = (keys[300], keys[301])
         execfile("multiple_character_input.py")
-        
+    
+    ## Updating the screen and related variables
+    frame += 1              # Incrementing current frame
     try:
         pygame.display.flip()   # Updating the screen
         clock.tick(fps)         # [fps] times per second
