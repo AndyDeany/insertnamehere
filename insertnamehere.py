@@ -227,6 +227,7 @@ while ongoing:
                 if accepting_text:
                     if event.key == 8 and input_text != "": input_text = input_text[:-1]
                     elif event.key == 9: pass   #! This is the TAB key. See extended comments.
+                    elif event.key == 13: accepting_text = False    # This is the enter key. It will cause the text to be accepted.
                     elif len(input_text) < maximum_characters: input_text = "".join((input_text, event.unicode))
             elif event.type == pygame.KEYUP:
                 execfile("keyup.py")        
