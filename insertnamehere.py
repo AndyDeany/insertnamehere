@@ -22,6 +22,7 @@ def log(error_message): # Defining the error logging function
     raise
 
 def load_image(image_name, fade_enabled=False): # Defining a function to load images
+    global error
     try:    #! Add stuff for loading images of the correct resolution depending on the player's resolution
         if not fade_enabled:
             return pygame.image.load("".join((file_directory, "Image Files\\", image_name, ".png"))).convert_alpha()
@@ -73,7 +74,7 @@ try:    ## Initialising game screen
                 os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
                 screen = pygame.display.set_mode(resolution, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.NOFRAME)
             else:
-                raise Exception("".join(("Unknown mode for reinitialise_screen(): \"", mode, "\" [syntax error].")))
+                raise Exception("".join(("Unknown mode for reinitialise_screen(): \"", mode, "\" [syntax error]")))
         except Exception as error:
             log("".join(("Failed to reinitialise screen in ", mode, " mode at ", str(screen_width), "x", str(screen_height), " resolution")))
     
@@ -104,7 +105,11 @@ accepting_text = False  # Showing whether the program is accepting text input fr
 input_text = ""         # The input text from the user
 max_characters = 0      # The maximum amount of allowed characters in an input text
 def return_key(n):  # Returns the keyboard key with key n.
-    return keys[n]  # keys = pygame.key.get_pressed() (should be assigned before this function is called)
+    global error
+    try:
+        return keys[n]  # keys = pygame.key.get_pressed() (should be assigned before this function is called)
+    except Exception as error:
+        log("function \"return_key(n)\" failed [syntax error]")
 character_keys = [n for n in range(44,58)] + [n for n in range(96,123)] + [n for n in range(256,272)] + [39, 59, 60, 61, 91, 92, 93]    # A list of all the keys that can produce characters when pressed
 try:
     execfile("reset_inputs.py")    
@@ -116,6 +121,7 @@ except Exception as error:
 ### ---------- FUNCTION DEFINITIONS - START ---------- ###
 def display(image, coordinates, area=None, special_flags=0):
     """Takes coordinates for a 1920x1080 window"""
+    global error
     try:
         coordinates = (coordinates[0]*(screen_width/1920.0), coordinates[1]*(screen_height/1080.0))
         screen.blit(image, coordinates, area, special_flags)
@@ -194,12 +200,17 @@ class Area(object): #! Perhaps add image name to this if it would make it easier
         self.image = None
     
     def add_blocked(self, displacement, width, height):     # Adds a rectangle of pixels to the blocked list
-        self.blocked.append((displacement[0], displacement[0] + width, displacement[1], displacement[1]+width))
+        global error
+        try:
+            self.blocked.append((displacement[0], displacement[0] + width, displacement[1], displacement[1]+width))
+        except Exception as error:
+            log(" ".join(("Failed to remove blocked area:", str(displacement), "(displacement),", str(width), "(width),", str(height), "(height)")))
     def remove_blocked(self, displacement, width, height):  # Removes a rectangle of pixels to the blocked list
+        global error
         try:
             self.blocked.remove((displacement[0], displacement[0] + width, displacement[1], displacement[1]+width))
         except Exception as error:
-            log("".join(("Failed to remove blocked area: (", str(
+            log(" ".join(("Failed to remove blocked area:", str(displacement), "(displacement),", str(width), "(width),", str(height), "(height)")))
         
         
 ### ---------- CLASS DEFINITIONS - END ---------- ###
@@ -283,7 +294,7 @@ while ongoing:
         log("Failed to update screen")
 ### ---------- PROGRAM DISPLAY - END ---------- ###
 
-#! Add code for autosaving the game
+#! Add code for autosaving the game (AND ERROR CATCH)
 
 pygame.quit()
 
