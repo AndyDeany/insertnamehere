@@ -131,10 +131,12 @@ def display(image, coordinates, area=None, special_flags=0):
 
 ### ---------- CLASS DEFINITIONS - START ---------- ###
 class Character(object):
-    def __init__(self, name, position, idle_frames, movement_frames, hitbox_width, hitbox_height, max_life, current_life, movement_speed):
+    def __init__(self, name, position, width, height, idle_frames, movement_frames, hitbox_width, hitbox_height, max_life, current_life, movement_speed):
         self.name = name        
-        self.position = position        # Tuple showing the displacement of the character's IMAGE file from the top left of the area image
+        self.position = position        # Tuple showing the displacement of the character's IMAGE file from the top left of the area image (in pixels)
         self.moving = False
+        self.width = width      # The width of the character's images in pixels
+        self.height = height    # The height of the character's images in pixels
         self.idle_images = None
         self.idle_frames = idle_frames  # The number of frames in the character's idle animation
         self.idle_frame = 0             # The current frame of the idle animation the character is on
@@ -154,19 +156,30 @@ class Character(object):
     def unload_images(self):
         self.idle_images = None
         self.movement_images = None
-    
-    def display(self):
-        if self.moving:
-            display(self.movement_images[self.movement_frame], 
         
-    def move(self, direction):
+    def display(self):  #! Displays relative to the player's coordinates
+        
+        
+    def move(self, direction): #! does this even need to be for all characters? probably a little since others may walk sometimes but then not in real time, so perhaps not. Could just be a cutscene.
         
 
 class Player(Character):
-    def __init__(self, name, idle_frames, movement_frames, hitbox_width, hitbox_height, max_life, current_life, movement_speed):
-        super(Player, self).__init__(name, idle_frames, movement_frames, hitbox_width, hitbox_height, max_life, current_life, movement_speed)
-        self.inventory = []
-        
+    def __init__(self, name, position, width, height, idle_frames, movement_frames, hitbox_width, hitbox_height, max_life, current_life, movement_speed):
+        super(Player, self).__init__(name, position, width, height, idle_frames, movement_frames, hitbox_width, hitbox_height, max_life, current_life, movement_speed)
+        self.inventory = [] 
+    
+    def display(self):  # Overwrites the display function inherited from the Character class
+        if self.moving:
+            display(self.movement_images[self.movement_frame], ((screen_width - self.width)/2, (screen_height - self.height)/2))            
+            self.movement_frame += 1
+            if self.movement_frame == self.movement_frames:
+                self.movement_frame = 0
+        else:
+            display(self.idle_images[self.idle_frame], ((screen_width - self.width)/2, (screen_height - self.height)/2))
+            self.idle_frame += 1
+            if self.idle_frame == self.idle_frames:
+                self.idle_frame = 0
+                
     def gain_item(self, name, amount):  #! Add some sort of sorting. Maybe alphabetical by name? Or perhaps allow the user to order their inventory?
         global error                    #! Inventory could be a grid or list. Grid should allow the user to order their own inventory. Position could be a 3rd element in the inventory tuple.
         try:
