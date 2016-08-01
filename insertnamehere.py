@@ -131,16 +131,40 @@ def display(image, coordinates, area=None, special_flags=0):
 
 ### ---------- CLASS DEFINITIONS - START ---------- ###
 class Character(object):
-    def __init__(self, name, max_life, current_life):
-        self.name = name
-        self.max_life = max_life
-        self.current_life = current_life
-
-class Player(Character):
-    def __init__(self, name, max_life, current_lifem, hitbox_width, hitbox_height):
-        super(Player, self).__init__(name, max_life, current_life)
+    def __init__(self, name, position, idle_frames, movement_frames, hitbox_width, hitbox_height, max_life, current_life, movement_speed):
+        self.name = name        
+        self.position = position        # Tuple showing the displacement of the character's IMAGE file from the top left of the area image
+        self.moving = False
+        self.idle_images = None
+        self.idle_frames = idle_frames  # The number of frames in the character's idle animation
+        self.idle_frame = 0             # The current frame of the idle animation the character is on
+        self.movement_images = None
+        self.movement_frames = movement_frames  # The number of frames in the character's movement animation
+        self.movement_frame = 0                 # The current frame of the movement animation the character is on
         self.hitbox_width = hitbox_width    # The width of the character's hitbox
         self.hitbox_height = hitbox_height  # The height of the character's hitbox
+        self.max_life = max_life
+        self.current_life = current_life
+        self.movement_speed = movement_speed
+    
+    def load_images(self):
+        self.idle_images = [load_image(name + "_idle" + str(frame)) for frame in range(idle_frames)]
+        self.movement_images = [load_image(name + "_movement" + str(frame)) for frame in range(movement_frames)]
+    
+    def unload_images(self):
+        self.idle_images = None
+        self.movement_images = None
+    
+    def display(self):
+        if self.moving:
+            display(self.movement_images[self.movement_frame], 
+        
+    def move(self, direction):
+        
+
+class Player(Character):
+    def __init__(self, name, idle_frames, movement_frames, hitbox_width, hitbox_height, max_life, current_life, movement_speed):
+        super(Player, self).__init__(name, idle_frames, movement_frames, hitbox_width, hitbox_height, max_life, current_life, movement_speed)
         self.inventory = []
         
     def gain_item(self, name, amount):  #! Add some sort of sorting. Maybe alphabetical by name? Or perhaps allow the user to order their inventory?
@@ -181,7 +205,7 @@ class Item(object): #! Perhaps add image name to this if it would make it easier
         self.image = None
         
 class Area(object): #! Perhaps add image name to this if it would make it easier.
-    def __init(self, name, grey_left, grey_up, accessible_width, accessible_height, blocked_squares, extras, exits):
+    def __init(self, name, width, height, grey_left, grey_up, accessible_width, accessible_height, blocked_squares, extras, exits):
         self.name = name
         self.image = None
         self.width = width      # The width of the image in pixels
